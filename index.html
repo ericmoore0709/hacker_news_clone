@@ -34,6 +34,9 @@
     <div class="navbar-brand">
       <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
     </div>
+    <div class="main-nav-links hidden">
+      <a class="nav-link" href="#" id="nav-submit">submit</a>
+    </div>
     <div class="nav-right">
       <a class="nav-link" href="#" id="nav-login">login/signup</a>
       <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -51,6 +54,21 @@
     <ol id="all-stories-list" class="stories-list"></ol>
 
   </section>
+
+  <!-- AddStory form -->
+  <form action="#" id="submit-form" class="hidden" method="post">
+    <h4>Add Story</h4>
+    <div>
+      <label for="submit-title">title</label>
+      <input id="submit-title">
+    </div>
+    <div>
+      <label for="submit-url">url</label>
+      <input id="submit-url">
+    </div>
+    <button type="submit">add</button>
+    <hr>
+  </form>
 
   <!-- Login and signup forms -->
   <section class="account-forms-container container">

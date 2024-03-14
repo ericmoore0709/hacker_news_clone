@@ -50,3 +50,51 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+async function processStorySubmit(e) {
+  console.debug('processStorySubmit');
+
+  e.preventDefault();
+
+  // collect data input
+  const title = $('#submit-title').val().trim() || '';
+  const url = $('#submit-url').val().trim() || '';
+
+  // data validation
+  const errors = [];
+  if (!title) errors.push("Title cannot be blank.");
+  if (!url) errors.push("URL cannot be blank.");
+
+  // display errors
+  if (errors.length) {
+    alert(errors);
+    return;
+  }
+
+  // organize input data
+  const newStory = {
+    title: title,
+    author: currentUser.name,
+    url: url
+  };
+
+  // post to API
+  const story = await storyList.addStory(currentUser, newStory);
+
+  // create HTML markup for the story
+  const $story = generateStoryMarkup(story);
+
+  // prepend story to storyList 
+  // because storyList.addStory() doesn't add the story to the storyList, apparently
+  $allStoriesList.prepend($story);
+
+  // empty the form
+  $submitForm.trigger('reset');
+
+  // go back to stories page
+  $submitForm.hide();
+  $allStoriesList.show();
+
+}
+
+$('#submit-form').submit(processStorySubmit);
