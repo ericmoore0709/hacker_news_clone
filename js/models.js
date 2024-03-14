@@ -218,7 +218,7 @@ class User {
    * @param {Story} story the story to remove from the user's favorites list.
    */
   async removeFavorite(story) {
-    await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, { token: this.loginToken })
+    await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, { data: { token: this.loginToken } })
       .then(() => {
         this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
       })

@@ -111,3 +111,36 @@ async function processStorySubmit(e) {
 }
 
 $('#submit-form').submit(processStorySubmit);
+
+async function toggleFavorite(e) {
+  console.debug("toggleFavorite");
+
+  const $target = $(e.target);
+
+  // get the story from the target story id
+  const storyId = $target.closest("li").attr("id");
+  const story = storyList.stories.find((s) => s.storyId === storyId);
+
+  if ($target.hasClass("far")) {
+    // story is not a favorite. Add to favorites
+    await currentUser.addFavorite(story)
+      .then(() => {
+        $target.closest('i').toggleClass("fas far");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    // story is a favorite. Remove from favorites
+    await currentUser.removeFavorite(story)
+      .then(() => {
+        $target.closest('i').toggleClass("fas far");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+}
+
+$allStoriesList.on('click', '.star', toggleFavorite);
