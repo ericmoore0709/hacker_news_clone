@@ -22,9 +22,12 @@ async function getAndShowStoriesOnStart() {
 function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
+  const showStar = Boolean(currentUser);
+
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
+        ${showStar ? getStarHTML(story, currentUser) : ""}
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -33,6 +36,16 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+}
+
+function getStarHTML(story) {
+  const isFavorite = currentUser.isFavorite(story);
+  const starType = isFavorite ? "fas" : "far";
+  return `
+    <span class="star">
+      <i class="${starType} fa-star"></i>
+    </span>
+  `;
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
