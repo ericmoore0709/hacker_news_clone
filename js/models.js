@@ -198,4 +198,42 @@ class User {
       return null;
     }
   }
+
+  /**
+   * Adds story to user favorites. Makes API post to server, then pushes story parameter to favorites array.
+   * @param {Story} story the story to add to the user's favorites list.
+   */
+  async addFavorite(story) {
+    await axios.post(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, { token: this.loginToken })
+      .then(() => {
+        this.favorites.push(story);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * Removes story from user favorites. Makes API post to server, then filters out story parameter from favorites array.
+   * @param {Story} story the story to remove from the user's favorites list.
+   */
+  async removeFavorite(story) {
+    await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, { token: this.loginToken })
+      .then(() => {
+        this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
+
+  /**
+   * Returns true if the id of the given story parameter is found in the user's favorites.
+   * @param {Story} story the story which ID to find 
+   * @returns true if story id found.
+   */
+  isFavorite(story) {
+    return this.favorites.some((s) => s.storyId === story.storyId);
+  }
+
 }
