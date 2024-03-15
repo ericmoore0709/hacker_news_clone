@@ -48,3 +48,35 @@ function navSubmitClick(evt) {
 }
 
 $navSubmit.click(navSubmitClick);
+
+function navFavoritesClick(e) {
+  console.debug("navFavoritesClick", e);
+
+  if (!currentUser.favorites.length) {
+    alert("No stories yet added to favorites.");
+    return;
+  }
+
+  hidePageComponents();
+  $favoriteStoriesList.empty();
+  $favoriteStoriesList.append(getFavoritesAsHTML());
+  $favoriteStoriesList.show();
+}
+
+$navFavorites.click(navFavoritesClick);
+
+function navOwnStoriesClick(e) {
+  console.debug("navOwnStoriesClick", e);
+
+  if (!currentUser.ownStories.length) {
+    alert("No stories yet created.");
+    return;
+  }
+
+  hidePageComponents();
+  $ownStoriesList.empty();
+  $ownStoriesList.append(getOwnStoriesAsHTML());
+  $ownStoriesList.show();
+}
+
+$navOwn.click(navOwnStoriesClick);

@@ -23,8 +23,8 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const showStar = Boolean(currentUser);
-
   const hostName = story.getHostName();
+
   return $(`
       <li id="${story.storyId}">
         ${showStar ? getStarHTML(story, currentUser) : ""}
@@ -94,6 +94,9 @@ async function processStorySubmit(e) {
   // post to API
   const story = await storyList.addStory(currentUser, newStory);
 
+  // push story to user ownStories
+  currentUser.ownStories.push(story);
+
   // create HTML markup for the story
   const $story = generateStoryMarkup(story);
 
@@ -143,4 +146,14 @@ async function toggleFavorite(e) {
 
 }
 
-$allStoriesList.on('click', '.star', toggleFavorite);
+$(".stories-list").on('click', '.star', toggleFavorite);
+
+function getFavoritesAsHTML() {
+  // compile, dress, and return currentUser favorites
+  return currentUser.favorites.map((s) => generateStoryMarkup(s));
+}
+
+function getOwnStoriesAsHTML() {
+  // compile, dress, and return currentUser stories
+  return currentUser.ownStories.map((s) => generateStoryMarkup(s));
+}
