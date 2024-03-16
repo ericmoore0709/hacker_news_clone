@@ -44,7 +44,7 @@ function getStarHTML(story) {
   const isFavorite = currentUser.isFavorite(story);
   const starType = isFavorite ? "fas" : "far";
   return `
-    <span>
+    <span class="star">
       <i class="${starType} fa-star"></i>
     </span>
   `;
@@ -151,6 +151,11 @@ async function toggleFavorite(e) {
     await currentUser.removeFavorite(story)
       .then(() => {
         $target.closest('i').toggleClass("fas far");
+
+        // if looking at the favorites list, refresh the HTML list to exclude the removed favorite
+        if ($target.closest('.stories-list').attr("id").includes("favorite")) {
+          $target.closest('.stories-list').empty().append(getFavoritesAsHTML());
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -170,3 +175,40 @@ function getOwnStoriesAsHTML() {
   // compile, dress, and return currentUser stories
   return currentUser.ownStories.map((s) => generateStoryMarkup(s));
 }
+
+async function deleteStoryClick(e) {
+
+  console.debug('deleteStoryClick', e);
+
+  if (!confirm('Are you sure you want to delete this story?')) return;
+
+  // get story id and call API
+  const storyId = $(e.target).closest('li').attr('id');
+  const result = await storyList.deleteStory(storyId);
+
+  if (result) {
+    // if successful, remove it from our JS array as well. 
+    currentUser.ownStories = currentUser.ownStories.filter((s) => s.storyId !== storyId);
+
+    // refresh HTML list
+    const $htmlList = $(e.target).closest('.stories-list');
+
+    if ($htmlList.attr('id').includes("own")) {
+      // is ownStoriesList
+      $htmlList.empty().append(getOwnStoriesAsHTML());
+    } else if ($htmlList.attr('id').includes("favorite")) {
+      // is favoritesList (tho this really shouldn't be possible in practice)
+      $htmlList.empty().append(getFavoritesAsHTML());
+    } else if ($htmlList.attr('id').includes("all")) {
+      // is allStoriesList
+      putStoriesOnPage();
+    }
+
+  }
+  else {
+    alert("Deletion unsuccessful.");
+  }
+
+}
+
+$(".stories-list").on('click', '.del', deleteStoryClick);

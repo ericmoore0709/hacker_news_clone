@@ -81,6 +81,22 @@ class StoryList {
         console.log("Error:" + err);
       })
   }
+
+  /**
+   * Deletes the story at the given storyId
+   * @param {String} storyId the id of the story to delete
+   * @returns The result of the transaction
+   */
+  async deleteStory(storyId) {
+    return await axios.delete(BASE_URL + '/stories/' + storyId, { data: { token: currentUser.loginToken } })
+      .then(() => {
+        return true;
+      })
+      .catch((err) => {
+        console.log("Error:" + err);
+        return false;
+      })
+  }
 }
 
 
@@ -221,6 +237,7 @@ class User {
     await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, { data: { token: this.loginToken } })
       .then(() => {
         this.favorites = this.favorites.filter((s) => s.storyId !== story.storyId);
+        console.log('favorites filtered');
       })
       .catch((err) => {
         console.log(err);
