@@ -236,4 +236,13 @@ class User {
     return this.favorites.some((s) => s.storyId === story.storyId);
   }
 
+  /**
+   * Returns true if the id of the given story parameter is found in the user's ownStories.
+   * @param {Story} story the story which ID to find 
+   * @returns true if story id found.
+   */
+  isOwnStory(story) {
+    return this.ownStories.some((s) => s.storyId === story.storyId);
+  }
+
 }
