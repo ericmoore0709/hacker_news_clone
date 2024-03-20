@@ -138,6 +138,7 @@ class User {
    */
 
   static async signup(username, password, name) {
+    try {
     const response = await axios({
       url: `${BASE_URL}/signup`,
       method: "POST",
@@ -156,6 +157,10 @@ class User {
       },
       response.data.token
     );
+    } catch (err) {
+      console.log(err);
+      return null
+    }
   }
 
   /** Login in user with API, make User instance & return it.

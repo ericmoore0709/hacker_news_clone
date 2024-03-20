@@ -43,6 +43,11 @@ async function signup(evt) {
   // which we'll make the globally-available, logged-in user.
   currentUser = await User.signup(username, password, name);
 
+  if (!currentUser) {
+    alert("User with that username already exists. Please try again.");
+    return
+  }
+
   saveUserCredentialsInLocalStorage();
   updateUIOnUserLogin();
 
